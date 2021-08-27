@@ -1,0 +1,8 @@
+/.idea
+/myHub.iml
+/private
+/target
+/其他
+/src/main/resources/private.properties
+/src/main/resources/generatorConfig.xml
+/src/main/resources/application-prod.yml

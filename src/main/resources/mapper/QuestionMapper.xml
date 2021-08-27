@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.diao.myhub.mapper.QuestionMapper">
+    <select id="getQuestions" resultType="question">
+        select * from myhub.question order by gmt_modify desc limit  #{offset},#{size};
+    </select>
+    <select id="getQuestionsById" resultType="question">
+        select * from myhub.question where creator=#{id} order by gmt_modify desc limit #{offset},#{size};
+    </select>
+    <update id="updateQuestion" parameterType="question">
+        update myhub.question
+            <set>
+                <if test="title!=null"> title = #{title},</if>
+                <if test="description!=null"> `description` = #{description},</if>
+                <if test="tag!=null">tag = #{tag},</if>
+                <if test="gmtModify!=null">gmt_modify= #{gmtModify}</if>
+            </set>
+            where id = #{id};
+    </update>
+    <select id="getQuestionsRelated" resultType="question">
+        select * from myhub.question
+         <where>
+             id != #{id} and
+            <foreach collection="tags" item="tag" open="(" separator="or" close=")">
+                tag like  concat('%',#{tag},'%')
+            </foreach>
+         </where>
+        order by `view_count` desc limit 0,5;
+    </select>
+    <select id="searchQuestions" resultType="question">
+        select * from myhub.question
+        <where>
+            <foreach collection="keys" item="key" open="(" separator="or" close=")">
+                title like  concat('%',#{key},'%')
+            </foreach>
+        </where>
+        order by gmt_modify desc limit  #{offset},#{size}
+    </select>
+    <select id="searchQuestionsCount" resultType="int">
+        select count(1) from myhub.question
+        <where>
+            <foreach collection="keys" item="key" open="(" separator="or" close=")">
+                title like  concat('%',#{key},'%')
+            </foreach>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发布</title>
+<!--    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">-->
+<!--    <link th:href="@{/css/bootstrap-theme.css}" rel="stylesheet">-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-theme.css}" rel="stylesheet">
+    <link th:href="@{/css/profile.css}" rel="stylesheet">
+    <link rel="stylesheet" href="/editor.md/css/editormd.min.css" />
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/editor.md/editormd.min.js"></script>
+    <script th:src="@{/js/myhub.js}"></script>
+    <script>
+        window.onload = function (){showTag()}
+    </script>
+
+</head>
+<body class="pub">
+<!--插入头部导航栏-->
+<div th:replace="~{common/commons::topbar(active='publish')}"></div>
+<div class="container-fluid">
+    <div class="row profile_body">
+        <div class="col-lg-9 col-md-12 col-sm-12" id="main">
+            <div>
+                <h2>发起问题</h2>
+            </div>
+            <hr>
+            <div class="alert alert-warning" th:if="${msg!=null}">
+                <a href="#" class="close" data-dismiss="alert">
+                    &times;
+                </a>
+                <strong><span th:text="${msg}+'!'"></span></strong>
+            </div>
+            <form role="form" method="post" action="/publish" onsubmit="return validate()">
+                <div class="form-group">
+                    <label for="title">问题标题</label>
+                    <input th:value="${question==null?'':question.title}" type="text" class="form-control" id="title" placeholder="请输入标题" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">问题描述</label>
+                    <div id="editor">
+                    <textarea style="display:none;"  th:text="${question==null?'':question.description}" class="form-control" cols="30" rows="10" id="description" placeholder="请输入问题描述" name="description" required>
+                    </textarea>
+                    </div>
+                    <script type="text/javascript">
+                        $(function() {
+                            var editor = editormd("editor", {
+                                width: "100%",
+                                height: 350,
+                                imageUpload          : true,          // Enable/disable upload
+                                imageFormats         : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                                imageUploadURL       : "/imgUpload",             // Upload url
+                                // markdown: "xxxx",     // dynamic set Markdown text
+                                path : "/editor.md/lib/"  // Autoload modules mode, codemirror, marked... dependents libs path
+                            });
+                        });
+                    </script>
+                </div>
+                <div class="form-group">
+                    <label for="tagInput">添加标签</label>
+                    <input th:value="${question==null?'':question.tag}" type="text" class="form-control" id="tagInput" placeholder="请输入标签,以逗号隔开" name="tag" required>
+                </div>
+                <div id="box" th:attr="allTags=${allTags}">
+                    <ul id="myTab" class="nav nav-tabs">
+                        <li th:each="tags:${tagsList}" >
+                            <a data-toggle="tab" th:href="@{'#tags'+${tags.categoryId}}" th:text="${tags.categoryName}" ></a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div th:each="tags:${tagsList}"  th:id="${'tags'+tags.categoryId}" th:class="${tags.categoryId==1?'tab-pane fade in active':'tab-pane fade'}">
+
+                            <div>
+                            <span  th:each="tag:${tags.tags}" th:attr="tagName=${tag}" class="btn btn-info btn-xs btn-tags"  onclick="inputTags(this)">
+                                <span class="glyphicon glyphicon-tag"></span>
+                                <span th:text="${tag}"></span>
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success pull-right">发布</button>
+            </form>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" id="tips">
+            <h3>发布指南</h3>
+        </div>
+    </div>
+</div>
+<div th:replace="~{common/commons::foot}"></div>
+</body>
+</html>

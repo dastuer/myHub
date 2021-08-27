@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>执行成功</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-theme.css}" rel="stylesheet">
+    <script th:href="@{/js/bootstrap.js}" type="text/javascript"></script>
+</head>
+<body>
+<div th:replace="~{common/commons::topbar(active='success')}"></div>
+<div class="container-fluid">
+    <h2 th:text="${msg}" style="color: green"></h2>
+    <h3><a th:href="@{/index}">回到首页</a></h3>
+</div>
+</body>
+</html>

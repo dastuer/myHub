@@ -1,0 +1,175 @@
+.profile_body{
+    margin: 21px 30px 0 30px;
+    padding: 10px 15px 30px 15px;
+}
+.media-object{
+    width: 25px;
+    height: 25px;
+    border-radius: 13px;
+}
+body{
+    background-color:#efefef;
+}
+.row{
+    background-color: #fff;
+}
+.text-desc{
+    font-size: 14px;
+    font-weight: normal;
+    color: #999;
+    padding: 0 0 0 10px;
+}
+.body_font{
+    font-size: 17px;
+    font-weight: 2;
+}
+
+.question{
+    margin: 15px;
+}
+
+.comment_media{
+    border-radius: 8px;
+    height: 35px;
+    width: 35px;
+}
+#head_img{
+    height: 35px;
+    width: 35px;
+    border-radius: 5px;
+}
+.btn-edit{
+    float: right;
+}
+.media{
+    margin: 15px;
+    font-size: 15px;
+}
+#comment{
+    margin: 10px
+}
+.btn-comment{
+    margin-top: 10px;
+    float: right;
+}
+.comments{
+    font-weight: 2;
+}
+.icon{
+    margin: 10px 10px 10px 0;
+}
+.date{
+    font-size: 14px;
+    color: #999999;
+    top: -1px;
+    position: relative;
+}
+.comment_count{
+    position: relative;
+    left: 15px;
+}
+.icon:hover{
+    color: #3838ee;
+}
+.comment_l2{
+    padding: 20px 0;
+    margin: 12px;
+    border: solid 1px #eee;
+    border-radius: 10px;
+    width: 95%;
+}
+.l2_c_form{
+    width: 97%;
+    position: relative;
+    left: 15px;
+}
+.btn-comment-l2{
+    position: relative;
+    right: 6px;
+    margin-top: 8px;
+    float: right;
+}
+
+.menu {
+    color: #999;
+    margin-top: 5px;
+}
+
+.menu .icon {
+    margin-right: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu .comment-icon {
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.menu .comment-icon :hover {
+    color: #499ef3;
+}
+
+.menu .active {
+    color: #499ef3;
+}
+
+.menu .icon:hover {
+    color: #499ef3;
+}
+.cCount{
+    position: relative;
+    top: -1px;
+}
+.tags{
+    margin: 0 10px 0 0;
+}
+.q_head{
+    margin: 0 0 5px 0;
+}
+.q_about{
+    padding: 0;
+    list-style-type: none;
+    font-size: 15px;
+    font-weight: 2;
+}
+.q_ab_li {
+    margin: 0 0 3px 0;
+}
+.btn-tags{
+    margin: 10px 10px 0 0;
+}
+.readAll{
+    margin: 15px;
+    font-size: 15px;
+    font-weight: 300;
+    color: green;
+    text-decoration: none;
+}
+.unread-icon{
+    background: #db2132;
+    border-radius: 5px;
+    position: relative;
+
+    left: 10px;
+    padding: 5px;
+    font-size: 10px;
+}
+.read-icon{
+    background: #23d423;
+    border-radius: 5px;
+    position: relative;
+
+    left: 10px;
+    padding: 5px;
+    font-size: 10px;
+}
+.message-media{
+    padding: 4px 0 0 0;
+}
+.footer {
+    text-align: center;
+    font-size: 12px;
+    color: #666;;
+    padding: 0 0 15px 0;
+}

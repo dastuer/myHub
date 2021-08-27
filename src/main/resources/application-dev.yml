@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 12345678
+    url: jdbc:mysql://localhost:3306/myhub?serverTimeZone=UTC
+  freemarker:
+    cache: false
+  thymeleaf:
+    cache: false
+  flyway:
+    enabled: false
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.diao.myhub.model
+  configuration:
+    map-underscore-to-camel-case: true
+
+springfox:
+  documentation:
+    enabled: true
+    swagger-ui:
+      enabled: true
+    open-api:
+      enabled: true
+logging:
+  file:
+    name: log/myhub.log
+  level:
+    root: info
+    life:
+      com.diao.myhub.mapper: debug
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+
+
+#  flyway:
+#    enabled: false
+#  # 禁止清理数据表
+#    clean-disabled: true
+#  # 版本控制信息表名，默认 flyway_schema_history
+#    table: flyway_schema_history
+#  # 是否允许不按顺序迁移
+#    out-of-order: false
+#  # 如果数据库不是空表，需要设置成 true，否则启动报错
+#    baseline-on-migrate: true
+#  # 与 baseline-on-migrate: true 搭配使用，小于此版本的不执行
+#    baseline-version: 0
+#  # 使用的schema
+#    schemas: test
+#  # 执行迁移时是否自动调用验证
+#    validate-on-migrate: true

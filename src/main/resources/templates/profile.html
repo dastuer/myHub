@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sectionName}"></title>
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap-theme.css" rel="stylesheet">-->
+<!--    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">-->
+<!--    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.js"></script>-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-theme.css}" rel="stylesheet">
+    <link th:href="@{/css/profile.css}" rel="stylesheet">
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/myhub.js}"></script>
+
+</head>
+<body>
+<!--插入头部导航栏-->
+<div th:replace="~{common/commons::topbar(active='')}"></div>
+<div class="container-fluid main">
+    <div class="row profile_body" >
+    <div class="col-lg-9 col-md-12 col-sm-12" id="main">
+            <div><h2 class="in_h1"><span th:text="${sectionName}"></span></h2></div>
+            <hr>
+                <!--     我的问题栏       -->
+                <div th:if="${section=='questions'}">
+                    <div class="media" th:each="que:${quez.questions}">
+                        <a th:href="@{'/question/'+${que.id}}"><h4 class="media-heading" th:text="${que.title}"></h4></a>
+                        <div class="media-left" >
+                            <a href="#">
+                                <img class="media-object"  alt="/images/default.png" th:src="${que.user.avatarUrl}">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <span class="text-desc">我创建于
+                            <span th:text="${#dates.format(que.gmtModify,'yyyy-MM-dd hh:mm')}"></span>
+                            <span th:text="${que.commentCount}"></span>个回复
+                            <span th:text="${que.viewCount}"></span>次浏览</span>
+                        </div>
+                    </div>
+                    <div th:if="${quez.page==quez.pageCount}">
+                        <h2 style="font-weight: 1">没有更多了</h2>
+                    </div>
+                    <nav aria-label="Page navigation ">
+                        <ul class="pagination">
+                            <li><a th:if="${quez.showFirst}" th:href="@{'/index/'+1}"><span aria-hidden="true">首页</span></a></li>
+                            <li><a th:if="${quez.showPrevious}" th:href="@{'/index/'+${quez.page - 1}}"><span>&laquo;</span></a></li>
+                            <li th:each="page:${quez.pages}" th:class="${page==quez.page?'active':''}"><a th:href="@{'/index/'+${page}}" th:text="${page}" ></a></li>
+                            <li><a th:if="${quez.showNext}" th:href="@{'/index/'+${quez.page+1}}" ><span>&raquo;</span></a></li>
+                            <li><a th:if="${quez.showLast}" th:href="@{'/index/'+${quez.pageCount}}"><span aria-hidden="true">尾页</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <!--     我的回复       -->
+                <div th:if="${section=='replies'}">
+                    <ul class="list-group">
+                    <li class="list-group-item" th:each="myComment:${myComments}">我在<a th:href="@{'/question/'+${myComment.question.id}}">
+                        <span th:text="${myComment.question.title}">某个问题</span></a>
+                        回复了
+                        <span th:text="${myComment.user.name+': '}">被回复者:</span>
+                        <span th:text="${myComment.content}">我的回复内容</span>&emsp;&emsp;
+                        <a class="pull-right" th:href="@{'/delReplies/'+${myComment.id}}">[删除]</a>
+                    </li>
+                    </ul>
+                </div>
+                <!--      我的消息      -->
+                <div th:if="${section=='message'}">
+                    <div class="col-lg-9 col-md-12 col-sm-12">
+                    <a class="readAll" th:href="@{/profile/message('readAll'='true')}" >[一键已读]</a>
+                    <div class="media" th:each="notify:${notifies}">
+                        <div class="media-body message-media">
+                            <h5 class="media-heading">
+                                <span th:text="${notify.user.name}"></span>
+                                在问题 <span><a th:href="@{'/question/'+${notify.question.id}('notify'=${notify.id})}">
+                                <span th:text="${notify.question.title}"></span></a></span>回复了我
+                                <span th:if="${notify.comment!=null}" th:text="'的评论'+${notify.comment.content}"></span>
+                                <span class="unread-icon" th:if="${notify.status==0}">未读</span>
+                                <span class="read-icon" th:if="${notify.status==1}">已读</span>
+                                <span class="pull-right"><a style="color: red" th:href="@{'/delMessage/'+${notify.id}}">删除</a></span>
+                            </h5>
+                           <span class="text-desc" th:text="${#dates.format(notify.gmtCreate,'yyy-MM-dd hh:mm:ss')}"></span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+    <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+        <div class="list-group">
+            <a th:href="@{/profile/questions}" th:class="${section=='questions'?' list-group-item list-group-item-info':'list-group-item'}">我的问题</a>
+            <a th:href="@{/profile/message}" th:class="${section=='message'?'list-group-item list-group-item-info':'list-group-item'}">我的消息<span th:if="${session.user.unread}>0" th:text="${session.user.unread}" class="badge"></span></a>
+            <a th:href="@{/profile/replies}" th:class="${section=='replies'?' list-group-item list-group-item-info':'list-group-item'}">我的回复</a>
+        </div>
+    </div>
+    </div>
+</div>
+<div th:replace="~{common/commons::foot}"></div>
+</body>
+</html>

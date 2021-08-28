@@ -36,7 +36,8 @@ public class CommentController {
     private CommentService commentService;
     @RequestMapping(value = "/comment",method = RequestMethod.POST)
     @ResponseBody
-    public String comment(@RequestBody Comment comment, HttpServletRequest req, HttpServletResponse resp){
+    public String comment(@RequestBody Comment comment, HttpServletRequest req){
+        System.out.println(comment);
         // 异步评论实现,返回JSON字符串
         HashMap<String, Integer> map = new HashMap<>();
         // 找到评论人
@@ -53,7 +54,7 @@ public class CommentController {
             throw new CustomizeException(CustomizeError.COMMENT_CONTENT_NULL);
         }
         // 设置评论时间以及修改时间,以及用户id
-        comment.setGmtCreate(new Date().getTime());
+        comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModify(comment.getGmtCreate());
         comment.setCommenter(user.getId());
         // 评论提交数据库,并判断提交是否成功

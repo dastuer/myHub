@@ -19,7 +19,12 @@
     <script src="/editor.md/lib/marked.min.js"></script>
     <script src="/editor.md/lib/prettify.min.js"></script>
     <script th:src="@{/js/myhub.js}"></script>
+    <script>
 
+    window.onload = function (){
+            flex();
+        }
+    </script>
 
 
 </head>
@@ -53,7 +58,13 @@
                 </script>
 
                 <p>
-                <a class="btn-edit" th:if="${session.user!=null&&question.creator==session.user.id}" th:href="@{'/question/edit/'+ ${question.id}}"><span class="glyphicon glyphicon-pencil"></span>编辑</a>
+                <!-- 编辑和点赞-->
+                <div><a class="btn-edit" th:if="${session.user!=null&&question.creator==session.user.id}" th:href="@{'/question/edit/'+ ${question.id}}"><span class="glyphicon glyphicon-pencil"></span>编辑</a></div>
+                 <div>
+                     <img  class="like" id="isLike" th:attr="status=${question.isLike},likeId=${question.id}" onclick="submit_question_like()"
+                            th:src="${(session.user!=null&&question.isLike==1)?'/images/is-like-active.png':'/images/is-like.png'}" alt="#">
+                     <span id="questionLikeCount" th:text="${question.likeCount}"></span>
+                 </div>
                 <hr>
             </div>
             <!--    问题评论       -->
@@ -107,7 +118,7 @@
 
         <!--    右侧边    -->
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <div><h3>发起人</h3></div>
+            <div><h4>发起人</h4></div>
             <hr>
             <div class="media">
                 <div class="media-left" >
@@ -120,12 +131,7 @@
                 </div>
             </div>
             <hr>
-            <div>
-                <h4>相关问题</h4>
-                <ul class="q_about" th:each="relate:${related}">
-                    <li class="q_ab_li"><a th:href="@{'/question/'+${relate.id}}" th:text="${relate.title}">问题1</a></li>
-                </ul>
-            </div>
+            <div th:replace="~{common/commons::sidebar}"></div>
     </div>
 
 </div>

@@ -2,6 +2,8 @@ package com.diao.myhub.service;
 
 import com.diao.myhub.dto.PaginationDTO;
 import com.diao.myhub.dto.QuestionDTO;
+import com.diao.myhub.enums.LikeStatusEnum;
+import com.diao.myhub.enums.LikeTypeEnum;
 import com.diao.myhub.exception.CustomizeError;
 import com.diao.myhub.exception.CustomizeException;
 import com.diao.myhub.mapper.QuestionMapper;
@@ -23,6 +25,8 @@ public class QuestionServiceImpl implements QuestionService{
     private QuestionMapper questionMapper;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private GreatService greatService;
     private static final Integer size = 6;
 
     @Autowired
@@ -36,7 +40,7 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public PaginationDTO getQuestions(String[]keys,Integer page) {
+    public PaginationDTO getQuestions(String tag,String[] keys,Integer page) {
         Integer offset = (page-1)*size;
         Integer totalCount = questionMapper.count();
         // 页数超过最大页面数,抛出异常
@@ -50,7 +54,11 @@ public class QuestionServiceImpl implements QuestionService{
         if (keys!=null&&keys.length>0){
            quez =  questionMapper.searchQuestions(keys,offset,size);
            qCount = questionMapper.searchQuestionsCount(keys);
-        }else {
+        }else if(tag!=null){
+            quez =  questionMapper.getQuestionsByTag(tag,offset,size);
+            qCount = questionMapper.questionTagCount(tag);
+        }
+        else {
             quez = questionMapper.getQuestions(offset,size);
             qCount = questionMapper.count();
         }
@@ -75,12 +83,17 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
-    public QuestionDTO getQuestionDTO(Long id) {
+    public QuestionDTO getQuestionDTO(User user,Long id) {
+        LikeStatusEnum isLikeStatus = LikeStatusEnum.LIKE_STATUS_UNLIKE;
+        if (user!=null){
+            isLikeStatus = greatService.getIsLikeStatus(user.getId(), id, LikeTypeEnum.LIKE_TYPE_QUESTION);
+        }
         Question question = getQuestion(id);
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
-        User user = userMapper.getUserById(question.getCreator());
-        questionDTO.setUser(user);
+        User creator = userMapper.getUserById(question.getCreator());
+        questionDTO.setUser(creator);
+        questionDTO.setIsLike(isLikeStatus.getStatus());
         return questionDTO;
     }
 
@@ -138,6 +151,7 @@ public class QuestionServiceImpl implements QuestionService{
         return paginationDTO;
     }
 
+    @Override
     public List<QuestionDTO> getQuestionsRelated(Long id){
         Question question = getQuestion(id);
         String tag = question.getTag();
@@ -149,5 +163,26 @@ public class QuestionServiceImpl implements QuestionService{
                     return questionDTO; }).
                 collect(Collectors.toList());
     }
+
+    @Override
+    public List<Question> getAllQuestions() {
+        return questionMapper.getAllQuestions();
+    }
+
+    @Override
+    public List<Question> getRecentQuestions(Long time,int offset,int limit) {
+        return questionMapper.getRecentQuestions(time,offset,limit);
+    }
+
+    @Override
+    public int updateLikeInc(Long likeId) {
+        return questionMapper.updateLikeInc(likeId);
+    }
+
+    @Override
+    public int updateLikeDec(Long likeId) {
+        return questionMapper.updateLikeDec(likeId);
+    }
+
 
 }

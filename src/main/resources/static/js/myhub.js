@@ -1,23 +1,21 @@
-window.onload=function (){
+function flex(){
     let main = $("#main");
     const height = main.height();
     const winHeight = $(window).innerHeight();
-    // console.log(height,winHeight)
-    if (height < winHeight){
-        main.height(winHeight);
-        // console.log(main.height());
+    if (height < (winHeight-100)){
+        main.height(winHeight-100);
     }
-};
+}
 function comment(content,parentId,type){
     $.ajax({
             type: "POST",
             url:"/comment",
-            contentType: 'application/json',
             data:JSON.stringify({
                 "content":content,
                 "parentId":parentId,
                 "type":type}),
             dataType:"json",
+            contentType:"application/json",
             success:function (data){
                 if (200===data.code){
                     window.location.reload();
@@ -204,4 +202,50 @@ function validate(){
         }
     }
     return true;
+}
+
+
+function submit_question_like() {
+    let isLike = $("#isLike");
+    let status = isLike.attr("status");
+    // 防止连续点击
+    let lastClick = window.localStorage.getItem("lastClick");
+    if (lastClick==null) {
+        window.localStorage.setItem("lastClick", (new Date().getTime()).toString());
+    }else {
+        let now = new Date().getTime();
+        let lastTime = Number(lastClick);
+        window.localStorage.setItem("lastClick",now.toString());
+        // console.log("now:"+now+","+"lastTime:"+lastTime)
+        if (now-lastTime < 300){
+            window.localStorage.setItem("lastClick",now.toString());
+            return;
+        }
+    }
+    let  questionLikeCount = $("#questionLikeCount");
+    // 切换图标,发送请求
+    if(status==='1'){
+        isLike.attr("src","/images/is-like.png");
+        isLike.attr("status",'0');
+        // 同步点赞数
+        questionLikeCount.text(Number(questionLikeCount.text())-1);
+    }else if (status==='0') {
+        isLike.attr("src","/images/is-like-active.png");
+        isLike.attr("status",'1');
+        questionLikeCount.text(Number(questionLikeCount.text())+1);
+    }
+    post_like(1,Number(isLike.attr("likeId")),Number(isLike.attr("status")))
+}
+function post_like(type,likeId,status){
+    $.ajax({
+        type: "POST",
+        url:"/like",
+        data:({
+            "status":status,
+            "likeId":likeId,
+            "type":type
+            }),
+        success:function (data){
+        }
+    });
 }

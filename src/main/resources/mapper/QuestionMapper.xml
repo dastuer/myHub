@@ -45,4 +45,17 @@
             </foreach>
         </where>
     </select>
+    <select id="getQuestionsByTag" resultType="question">
+        select * from myhub.question
+        <where>
+                tag like  concat('%',#{tag},'%')
+        </where>
+        order by gmt_modify desc limit  #{offset},#{size}
+    </select>
+    <select id="questionTagCount" resultType="int">
+        select count(1) from myhub.question
+        <where>
+            tag like  concat('%',#{tag},'%')
+        </where>
+    </select>
 </mapper>

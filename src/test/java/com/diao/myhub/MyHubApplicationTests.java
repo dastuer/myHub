@@ -2,6 +2,7 @@ package com.diao.myhub;
 
 import com.diao.myhub.mapper.PublishMapper;
 import com.diao.myhub.mapper.QuestionMapper;
+import com.diao.myhub.schedule.HotTagTasks;
 import com.diao.myhub.service.CommentService;
 import com.diao.myhub.service.NotifyService;
 import com.diao.myhub.service.QuestionService;
@@ -26,6 +27,8 @@ class MyHubApplicationTests {
     private CommentService commentService;
     @Autowired
     private NotifyService notifyService;
+    @Autowired
+    private HotTagTasks tagTasks;
 
     @Test
     void contextLoads() {
@@ -38,7 +41,8 @@ class MyHubApplicationTests {
 //        }
 //        List<CommentDTO> commentsByQuestion = commentService.getCommentsByQuestion((long) 41);
 //        System.out.println(commentsByQuestion);
-        System.out.println(notifyService.getNotifyDTOS(23).size());
+//        System.out.println(notifyService.getNotifyDTOS(23).size());
+        tagTasks.hotTagSchedule();
 
     }
 

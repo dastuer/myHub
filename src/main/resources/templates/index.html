@@ -15,6 +15,7 @@
     <script>
         window.onload = function() {
             isLogin();
+            flex();
         }
     </script>
 
@@ -59,10 +60,12 @@
 
     </div>
     <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-        <h2>热门话题</h2>
+        <div style="height: 75px"></div>
+        <div th:replace="~{common/commons::sidebar}"></div>
     </div>
 </div>
 </div>
+<!--插入底边信息栏-->
 <div th:replace="~{common/commons::foot}"></div>
 </body>
 </html>

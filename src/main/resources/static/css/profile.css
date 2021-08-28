@@ -173,3 +173,16 @@ body{
     color: #666;;
     padding: 0 0 15px 0;
 }
+.hotTags{
+    display: inline-block;
+    margin: 0px 0 5px 0;
+}
+.hotTags a{
+    text-decoration: none;
+    color: white;
+}
+.like{
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+}

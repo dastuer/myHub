@@ -5,6 +5,7 @@ import com.diao.myhub.dto.GiteeUser;
 import com.diao.myhub.model.User;
 import com.diao.myhub.provider.GiteeProvider;
 import com.diao.myhub.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 // 接入gitee控制器
 @Controller
+@Slf4j
 @PropertySource("classpath:private.properties")
 public class OAuthController {
     @Autowired
@@ -84,10 +86,10 @@ public class OAuthController {
             // 无论是否登录过,都会创建cookie和session
             req.getSession().setAttribute("user",user);
             Cookie clientToken = new Cookie("token", token);
-            clientToken.setMaxAge(24*60*60);
+            clientToken.setMaxAge(2_592_000);
             clientToken.setPath("/");
             resp.addCookie(clientToken);
-        }
+        }else {log.error("gitee错误,获取用户信息失败{}",giteeUser);}
         return "redirect:/index";
     }
     // 通过gitee用户创建本地用户
@@ -95,7 +97,7 @@ public class OAuthController {
         User user = new User();
         user.setName(giteeUser.getName());
         user.setAccountId("gitee"+ giteeUser.getId());
-        user.setGmtCreate(new Date().getTime());
+        user.setGmtCreate(System.currentTimeMillis());
         user.setGmtModify(user.getGmtCreate());
         user.setBio(giteeUser.getBio());
         user.setAvatarUrl(giteeUser.getAvatar_url());

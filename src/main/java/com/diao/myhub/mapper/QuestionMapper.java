@@ -27,4 +27,14 @@ public interface QuestionMapper {
     @Update("update myhub.question set comment_count = comment_count - 1 where id=#{id}")
     int updateCommentDe(Long id);
     List<Question> getQuestionsRelated(long id,String[] tags);
+    @Select("select * from myhub.question")
+    List<Question> getAllQuestions();
+    @Select("select * from myhub.question where gmt_modify >= #{time} limit #{offset},#{limit}")
+    List<Question> getRecentQuestions(Long time, int offset, int limit);
+    List<Question> getQuestionsByTag(String tag, Integer offset, Integer size);
+    Integer questionTagCount(String tag);
+    @Update(("update myhub.question set like_count = like_count+1 where id=#{likeId}"))
+    int updateLikeInc(Long likeId);
+    @Update(("update myhub.question set like_count = like_count-1 where id=#{likeId}"))
+    int updateLikeDec(Long likeId);
 }

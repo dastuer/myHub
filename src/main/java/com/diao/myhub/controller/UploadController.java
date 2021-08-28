@@ -37,7 +37,7 @@ public class UploadController {
         ImageDTO imageDTO = new ImageDTO();
 
         imageDTO.setUrl(cloudProvider.getUrl(cosClient,key));
-        imageDTO.setMessage("cc");
+        imageDTO.setMessage("ok");
         imageDTO.setSuccess(1);
         cosClient.shutdown();
         return JSON.toJSONString(imageDTO);

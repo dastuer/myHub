@@ -1,5 +1,8 @@
 package com.diao.myhub.model;
 
+import lombok.Data;
+
+@Data
 public class Comment {
     /**
      *

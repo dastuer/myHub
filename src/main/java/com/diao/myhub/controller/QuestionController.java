@@ -1,10 +1,12 @@
 package com.diao.myhub.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.diao.myhub.cache.HotTagCache;
 import com.diao.myhub.cache.TagCache;
 import com.diao.myhub.dto.CommentDTO;
 import com.diao.myhub.dto.QuestionDTO;
 import com.diao.myhub.enums.CommentTypeEnum;
+import com.diao.myhub.enums.LikeStatusEnum;
 import com.diao.myhub.enums.NotifyStatusEnum;
 import com.diao.myhub.exception.CustomizeError;
 import com.diao.myhub.exception.CustomizeException;
@@ -37,11 +39,15 @@ public class QuestionController {
     private NotifyService notifyService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private HotTagCache hotTagCache;
+    @Autowired
+    private GreatService greatService;
     @GetMapping("/question/{id}")
     public String question(@PathVariable("id") Long id, Long notify, Model model, HttpSession session){
         questionService.updateView(id);
+        User user = (User) session.getAttribute("user");
         if (notify!=null){
-            User user = (User) session.getAttribute("user");
             if (user==null){throw new CustomizeException(CustomizeError.NO_LOGIN);}
             Short status = notifyService.getNotifyById(notify).getStatus();
             if (status.equals(NotifyStatusEnum.UNREAD.getStatus())){
@@ -49,18 +55,18 @@ public class QuestionController {
                 userService.updateUnreadDe(user.getId());
             }
         }
-        QuestionDTO question = questionService.getQuestionDTO(id);
+        QuestionDTO question = questionService.getQuestionDTO(user,id);
         List<CommentDTO> comments = commentService.getCommentsByPid(id,CommentTypeEnum.COMMENT_TYPE_QUESTION);
         List<QuestionDTO> related = questionService.getQuestionsRelated(id);
         model.addAttribute("comments",comments);
         model.addAttribute("question",question);
         model.addAttribute("related",related);
+        model.addAttribute("hotTags",hotTagCache.getHotTags());
         return "question";
     }
     @GetMapping("/question/edit/{id}")
     public String edit(@PathVariable("id") Long id, Model model,HttpServletRequest req){
 
-//        System.out.println(question);
         User user = (User)req.getSession().getAttribute("user");
         if (user==null){
             throw new CustomizeException(CustomizeError.NO_LOGIN);

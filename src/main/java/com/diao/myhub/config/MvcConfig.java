@@ -24,10 +24,11 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userInfoFlushInterceptor).addPathPatterns("/**");
         registry.addInterceptor(loginInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/","/index/**","/index","/login","/callback","/images/**",
-                "/main","/js/**","/css/**","/fonts/**","/error/**","/swagger-ui/**","/question/**",
+                "/main","/js/**","/css/**","/fonts/**","/loginError","/innerError","/swagger-ui/**","/question/**",
                 "/comment/**","/editor.md/**");
-        registry.addInterceptor(userInfoFlushInterceptor).addPathPatterns("/**");
+
     }
 }

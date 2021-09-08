@@ -57,7 +57,7 @@ public class PublishController {
             model.addAttribute("msg","标签错误,请检查标签是否重复或存在");
             return "publish";
         }
-        question.setGmtCreate(new Date().getTime());
+        question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModify(question.getGmtCreate());
         int res = publishService.addQuestion(question);
         if (res==0){

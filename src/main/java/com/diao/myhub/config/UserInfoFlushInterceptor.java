@@ -34,7 +34,6 @@ public class UserInfoFlushInterceptor implements HandlerInterceptor {
                         // 找到用户允许访问
                         if (relUser != null) {
                             req.getSession().setAttribute("user", relUser);
-                            return true;
                         }
                     }
                 }

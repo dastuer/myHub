@@ -21,7 +21,7 @@ public  class GreatServiceImpl implements GreatService{
     public LikeStatusEnum getIsLikeStatus(int userId, Long likeId, LikeTypeEnum typeEnum) {
         GreatExample greatExample = new GreatExample();
         greatExample.createCriteria().andUserIdEqualTo(userId).andLikeIdEqualTo(likeId).
-                andStatusEqualTo(typeEnum.getType());
+                andTypeEqualTo(typeEnum.getType());
         List<Great> greats = greatMapper.selectByExample(greatExample);
         if (greats==null||greats.size()==0){
             return LikeStatusEnum.LIKE_STATUS_UNLIKE;
@@ -52,5 +52,21 @@ public  class GreatServiceImpl implements GreatService{
         GreatExample greatExample = new GreatExample();
         greatExample.createCriteria().andIdEqualTo(great.getId());
         return   greatMapper.updateByExample(great,greatExample);
+    }
+
+    @Override
+    public long countByQuestionId(Long id) {
+        GreatExample greatExample = new GreatExample();
+        greatExample.createCriteria().andLikeIdEqualTo(id).andTypeEqualTo(LikeTypeEnum.LIKE_TYPE_QUESTION.getType()).
+                andStatusEqualTo(LikeStatusEnum.LIKE_STATUS_LIKED.getStatus());
+        return greatMapper.countByExample(greatExample);
+
+    }
+    @Override
+    public long countByCommentId(Long id) {
+        GreatExample greatExample = new GreatExample();
+        greatExample.createCriteria().andLikeIdEqualTo(id).andTypeEqualTo(LikeTypeEnum.LIKE_TYPE_COMMENT.getType()).
+                andStatusEqualTo(LikeStatusEnum.LIKE_STATUS_LIKED.getStatus());
+        return greatMapper.countByExample(greatExample);
     }
 }

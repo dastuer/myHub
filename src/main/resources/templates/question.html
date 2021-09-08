@@ -21,6 +21,7 @@
     <script th:src="@{/js/myhub.js}"></script>
     <script>
 
+
     window.onload = function (){
             flex();
         }
@@ -39,9 +40,10 @@
                 <div class="q_head">
                 <h3><span th:text="${question.title}"></span></h3>
                 <span class="text-desc">
-                作者: <span th:text="${question.user.name}"></span>
-                阅读数: <span th:text="${question.viewCount}"></span>
-                发布时间: <span th:text="${#dates.format(question.gmtCreate,'yyy-MM-dd hh:mm:ss')}"></span>
+                作者: <span th:text="${question.user.name}"></span>&nbsp;
+                阅读: <span th:text="${question.viewCount}"></span>&nbsp;
+                喜欢: <span th:text="${question.likeCount}"></span>&nbsp;
+                发布: <span th:text="${#dates.format(question.gmtCreate,'yyy-MM-dd hh:mm:ss')}"></span>
                 </span>
                 </div>
                 <div><span class="label label-info tags" th:each="tag:${question.tag.split(',')}" th:text="${tag}"></span></div>
@@ -56,20 +58,26 @@
                     $(function() {
                         var testView = editormd.markdownToHTML("markdown-view", {});});
                 </script>
-
                 <p>
-                <!-- 编辑和点赞-->
-                <div><a class="btn-edit" th:if="${session.user!=null&&question.creator==session.user.id}" th:href="@{'/question/edit/'+ ${question.id}}"><span class="glyphicon glyphicon-pencil"></span>编辑</a></div>
-                 <div>
-                     <img  class="like" id="isLike" th:attr="status=${question.isLike},likeId=${question.id}" onclick="submit_question_like()"
-                            th:src="${(session.user!=null&&question.isLike==1)?'/images/is-like-active.png':'/images/is-like.png'}" alt="#">
-                     <span id="questionLikeCount" th:text="${question.likeCount}"></span>
-                 </div>
+                <!-- 编辑删除-->
+                <div th:if="${session.user!=null&&question.creator==session.user.id}">
+                    <a class="pull-right" onclick="return confirm('确认要删除吗')" style="color: red" th:href="@{'/question/delete/'+ ${question.id}}"><span class="glyphicon glyphicon-remove-circle"></span>删除</a>
+                    <a class="btn-edit"  th:href="@{'/question/edit/'+ ${question.id}}"><span class="glyphicon glyphicon-pencil"></span>编辑</a>
+                </div>
+                <p></p>
                 <hr>
             </div>
             <!--    问题评论       -->
                 <!--     展示评论      -->
-                <h4 class="comment_count"> 评论 <span th:text="${question.commentCount}"></span></h4>
+                <div class="comment_count ">
+                    <span class="qcomment"><a href="#comment"><img class="like" src="/images/comment.png" alt="#"></a><span th:text="${question.commentCount}"></span></span>
+                    <span><img  class="like" id="isLike" th:attr="status=${question.isLike},likeId=${question.id}" onclick="submit_question_like()"
+                          th:src="${(session.user!=null&&question.isLike==1)?'/images/is-like-active.png':'/images/is-like.png'}" alt="#">
+                          <span id="questionLikeCount" th:text="${question.likeCount}"></span>
+                    </span>
+                </div>
+            <br>
+
                 <div class="media" th:if="${comments!=null}" th:each="comment:${comments}">
                 <div class="media-left" >
                     <a href="#">
@@ -80,7 +88,9 @@
                     <h5><span th:text="${comment.user.name}"></span></h5>
                     <div class="comments" th:text="${comment.content}">评论内容</div>
                     <div class="menu">
-                        <a href="#"><span class="glyphicon glyphicon-thumbs-up icon"></span></a>
+                        <a  onclick="submit_comment_like(this)" th:attr="cid = ${comment.id},like=${comment.likedStatus}"
+                            th:class="${session.user!=null&&comment.likedStatus==1?'glyphicon glyphicon-thumbs-up icon like-active': 'glyphicon glyphicon-thumbs-up icon'}">
+                        </a><span class="cCount" th:text="${comment.likeCount}" th:id="${'commentLike'+comment.id}"></span>
                         <span th:data-id="${comment.id}"
                               onclick="collapseComments(this)" class="comment-icon glyphicon glyphicon-comment"></span>
                         <span class="cCount" th:text="${comment.subCommentCount}"></span>

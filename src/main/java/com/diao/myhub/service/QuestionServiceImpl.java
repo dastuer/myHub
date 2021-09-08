@@ -48,9 +48,9 @@ public class QuestionServiceImpl implements QuestionService{
             throw new CustomizeException(CustomizeError.PAGE_NOT_FOUND);
         }
         // 获取数据库问题列表
-        List<Question> quez = null;
+        List<Question> quez;
         // 获取问题总数
-        Integer qCount = 0;
+        Integer qCount;
         if (keys!=null&&keys.length>0){
            quez =  questionMapper.searchQuestions(keys,offset,size);
            qCount = questionMapper.searchQuestionsCount(keys);
@@ -100,12 +100,16 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public Question getQuestion(Long id) {
         Question question = questionMapper.getQuestion(id);
-//        System.out.println(question);
         if (question==null){
             throw new CustomizeException(CustomizeError.QUESTION_NOT_FOUND);
         }else {
             return question;
         }
+    }
+
+    @Override
+    public Question getQuestionWithNull(Long id) {
+        return questionMapper.getQuestion(id);
     }
 
     @Override
@@ -131,7 +135,7 @@ public class QuestionServiceImpl implements QuestionService{
         }
         return res;
     }
-
+    @Override
     public PaginationDTO getPaginationDTO(Integer qCount,Integer page,List<Question> quez){
         // 页面数据,包括问题数,分页等信息
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -182,6 +186,19 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public int updateLikeDec(Long likeId) {
         return questionMapper.updateLikeDec(likeId);
+    }
+
+    @Override
+    public int refreshLikeCount(Long id) {
+        long questionLikeCount = greatService.countByQuestionId(id);
+        return questionMapper.updateLikeCount(id,questionLikeCount);
+    }
+
+    @Override
+    public int delQuestionById(Long id) {
+       return questionMapper.delQuestionById(id);
+
+
     }
 
 

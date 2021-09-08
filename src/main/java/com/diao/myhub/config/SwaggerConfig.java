@@ -19,7 +19,6 @@ public class SwaggerConfig implements WebMvcConfigurer {
         // 获取当前环境
         Profiles isDev = Profiles.of("dev");
         boolean flag = environment.acceptsProfiles(isDev);
-//        System.out.println(flag);
         return new Docket(DocumentationType.OAS_30)
                 // 根据环境开启或关闭swagger Docket
                 .enable(flag)

@@ -8,10 +8,12 @@ import com.diao.myhub.model.User;
 import java.util.List;
 
 public interface QuestionService {
-    public PaginationDTO getQuestions(String tag ,String[] keys,Integer page);
-    public PaginationDTO getQuestionsById(Integer id,Integer page);
+    PaginationDTO getPaginationDTO(Integer qCount, Integer page, List<Question> quez);
+    PaginationDTO getQuestions(String tag, String[] keys, Integer page);
+    PaginationDTO getQuestionsById(Integer id, Integer page);
     QuestionDTO getQuestionDTO(User user,Long id);
     Question getQuestion(Long id);
+    Question getQuestionWithNull(Long id);
     int updateQuestion(Question question);
     int updateView(Long id);
     int updateComment(Long id);
@@ -24,4 +26,7 @@ public interface QuestionService {
 
     int updateLikeDec(Long likeId);
 
+    int refreshLikeCount(Long id);
+
+    int delQuestionById(Long id);
 }

@@ -1,6 +1,7 @@
 package com.diao.myhub.mapper;
 
 import com.diao.myhub.model.Question;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -37,4 +38,8 @@ public interface QuestionMapper {
     int updateLikeInc(Long likeId);
     @Update(("update myhub.question set like_count = like_count-1 where id=#{likeId}"))
     int updateLikeDec(Long likeId);
+    @Update("update myhub.question set like_count = #{questionLikeCount} where id = #{id}")
+    int updateLikeCount(Long id, long questionLikeCount);
+    @Delete("delete  from myhub.question where id = #{id}")
+    int delQuestionById(Long id);
 }

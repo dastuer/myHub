@@ -48,7 +48,7 @@ public class NotifyServiceImpl implements NotifyService {
         // 创建通知
         Notify notify = new Notify();
         notify.setNotifier(comment.getCommenter());
-        notify.setGmtCreate(new Date().getTime());
+        notify.setGmtCreate(System.currentTimeMillis());
         notify.setStatus(NotifyStatusEnum.UNREAD.getStatus());
         notify.setOuterId(comment.getParentId());
         notify.setOuterTitle(comment.getContent());

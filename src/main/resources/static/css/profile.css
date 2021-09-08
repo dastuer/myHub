@@ -40,6 +40,7 @@ body{
 }
 .btn-edit{
     float: right;
+    margin: 0 10px 0 0;
 }
 .media{
     margin: 15px;
@@ -99,6 +100,11 @@ body{
     margin-right: 6px;
     font-size: 15px;
     cursor: pointer;
+    color: #999999;
+    text-decoration: none;
+}
+.menu .like-active{
+    color: #499EF3;
 }
 
 .menu .comment-icon {
@@ -185,4 +191,14 @@ body{
     width: 24px;
     height: 24px;
     font-size: 14px;
+}
+.comment_count a{
+    text-decoration: none;
+    color: white;
+}
+.comment_count .qcomment{
+    margin: 0 15px 0 0;
+}
+.q_head .text-desc{
+    padding: 0;
 }

@@ -37,7 +37,7 @@ public class CommentController {
     @RequestMapping(value = "/comment",method = RequestMethod.POST)
     @ResponseBody
     public String comment(@RequestBody Comment comment, HttpServletRequest req){
-        System.out.println(comment);
+//        System.out.println(comment);
         // 异步评论实现,返回JSON字符串
         HashMap<String, Integer> map = new HashMap<>();
         // 找到评论人
@@ -69,7 +69,7 @@ public class CommentController {
     @RequestMapping(value = "/comment/{id}",method = RequestMethod.GET)
     @ResponseBody
     public String subComment(@PathVariable("id") Long id){
-        List<CommentDTO> commentDTOS = commentService.getCommentsByPid(id, CommentTypeEnum.COMMENT_TYPE_COMMENT);
+        List<CommentDTO> commentDTOS = commentService.getCommentsByPid(null,id, CommentTypeEnum.COMMENT_TYPE_COMMENT);
         return JSON.toJSONString(commentDTOS);
     }
 

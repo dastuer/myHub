@@ -1,0 +1,48 @@
+server:
+  port: 80
+  max-http-header-size: 1024KB
+gitee:
+  client:
+    grant_type: authorization_code
+    client_id: 721e8b39b94d2671338006a93a9d578dca226c37d5e9f8a90d12b9ba8e2b2b3f
+    client_secret: 9ce4f762b693e4aa00ed236e8f829b1ad6ff6925266275fd420d046e8646b9e1
+#    redirect_uri: http://www.myhub.ltd/callback
+    redirect_uri: http://106.15.38.239:80/callback
+#    getOAuth_url: https://gitee.com/oauth/authorize?client_id=721e8b39b94d2671338006a93a9d578dca226c37d5e9f8a90d12b9ba8e2b2b3f&&redirect_uri=http://www.myhub.ltd/callback&&response_type=code
+    getOAuth_url: https://gitee.com/oauth/authorize?client_id=721e8b39b94d2671338006a93a9d578dca226c37d5e9f8a90d12b9ba8e2b2b3f&&redirect_uri=http://106.15.38.239:80/callback&&response_type=code
+cosClient:
+  secretId: "AKIDIPGqADzTgcHflbAm7ByUjgNmulLegQt5"
+  secretKey: "wbz7xXprc5HH0RbT6SWJq65mEPJvGJ5Z"
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 12345678
+    url: jdbc:mysql://localhost:3306/myhub?serverTimeZone=UTC
+  thymeleaf:
+    cache: false
+  flyway:
+    enabled: false
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.diao.myhub.model
+  configuration:
+    map-underscore-to-camel-case: true
+springfox:
+  documentation:
+    enabled: false
+    swagger-ui:
+      enabled: false
+    open-api:
+      enabled: false
+logging:
+  file:
+    name: log/myhub.log
+  level:
+    root: info
+    life:
+      com.diao.myhub.mapper: debug
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30

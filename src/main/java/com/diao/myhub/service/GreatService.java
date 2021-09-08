@@ -14,4 +14,8 @@ public interface GreatService {
     int createRecord(Great great);
 
     int updateRecord(Great great);
+
+    long countByQuestionId(Long id);
+    long countByCommentId(Long id);
+
 }

@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${sectionName}"></title>
-<!--    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap-theme.css" rel="stylesheet">-->
-<!--    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">-->
-<!--    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.js"></script>-->
     <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap-theme.css}" rel="stylesheet">
     <link th:href="@{/css/profile.css}" rel="stylesheet">
@@ -59,8 +56,9 @@
                 <!--     我的回复       -->
                 <div th:if="${section=='replies'}">
                     <ul class="list-group">
-                    <li class="list-group-item" th:each="myComment:${myComments}">我在<a th:href="@{'/question/'+${myComment.question.id}}">
-                        <span th:text="${myComment.question.title}">某个问题</span></a>
+                    <li class="list-group-item" th:each="myComment:${myComments}">我在
+                        <a th:href="${myComment.question==null?'#':'/question/'+myComment.question.id}">
+                        <span th:class="${myComment.question==null?'red':''}"  th:text="${myComment.question==null?'问题已被删除':myComment.question.title}">某个问题</span></a>
                         回复了
                         <span th:text="${myComment.user.name+': '}">被回复者:</span>
                         <span th:text="${myComment.content}">我的回复内容</span>&emsp;&emsp;

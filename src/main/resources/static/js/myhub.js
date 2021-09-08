@@ -206,22 +206,9 @@ function validate(){
 
 
 function submit_question_like() {
+    if (voidClick()===0){return;}
     let isLike = $("#isLike");
     let status = isLike.attr("status");
-    // 防止连续点击
-    let lastClick = window.localStorage.getItem("lastClick");
-    if (lastClick==null) {
-        window.localStorage.setItem("lastClick", (new Date().getTime()).toString());
-    }else {
-        let now = new Date().getTime();
-        let lastTime = Number(lastClick);
-        window.localStorage.setItem("lastClick",now.toString());
-        // console.log("now:"+now+","+"lastTime:"+lastTime)
-        if (now-lastTime < 300){
-            window.localStorage.setItem("lastClick",now.toString());
-            return;
-        }
-    }
     let  questionLikeCount = $("#questionLikeCount");
     // 切换图标,发送请求
     if(status==='1'){
@@ -236,6 +223,25 @@ function submit_question_like() {
     }
     post_like(1,Number(isLike.attr("likeId")),Number(isLike.attr("status")))
 }
+function submit_comment_like(e){
+    if (voidClick()===0){return;}
+   let isLike =  $(e).attr("like");
+   let id = $(e).attr("cid");
+   if (isLike==='1'){
+       $(e).css('color','#999999');
+       let clkCount = $("#commentLike"+id);
+       let likeCount = clkCount.text();
+       clkCount.text(Number(likeCount)-1);
+       $(e).attr("like",'0');
+   }else if (isLike==='0'){
+       $(e).css('color','#499ef3');
+       let clkCount = $("#commentLike"+id);
+       let likeCountText = clkCount.text();
+       clkCount.text(Number(likeCountText)+1);
+       $(e).attr("like",'1');
+   }
+    post_like(2,Number(id),Number($(e).attr('like')))
+}
 function post_like(type,likeId,status){
     $.ajax({
         type: "POST",
@@ -247,5 +253,27 @@ function post_like(type,likeId,status){
             }),
         success:function (data){
         }
+    });
+}
+function voidClick(){
+    // 防止连续点击
+    let lastClick = window.localStorage.getItem("lastClick");
+    if (lastClick==null) {
+        window.localStorage.setItem("lastClick", (new Date().getTime()).toString());
+    }else {
+        let now = new Date().getTime();
+        let lastTime = Number(lastClick);
+        window.localStorage.setItem("lastClick",now.toString());
+        // console.log("now:"+now+","+"lastTime:"+lastTime)
+        if (now-lastTime < 300){
+            window.localStorage.setItem("lastClick",now.toString());
+            return 0;
+        }
+    }
+    return 1;
+}
+function confirm_delete(e) {
+    $(e).click(function(){
+
     });
 }

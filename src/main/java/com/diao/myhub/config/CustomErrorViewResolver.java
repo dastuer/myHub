@@ -7,12 +7,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+/**
+ * @author Morty
+ */
 @Component
 public class CustomErrorViewResolver implements ErrorViewResolver {
     @Override
     public ModelAndView resolveErrorView(HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
         ModelAndView mv = new ModelAndView();
-        String message = null;
+        String message;
         if (status.is4xxClientError()){
             message  = "你这个请求错了吧，要不然换个姿势？";
         }

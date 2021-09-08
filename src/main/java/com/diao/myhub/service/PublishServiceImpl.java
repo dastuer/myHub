@@ -22,6 +22,7 @@ public class PublishServiceImpl implements PublishService{
     public int addQuestion(Question question) {
      return mapper.addQuestion(question);
     }
+    @Override
     public boolean validate(String tags){
         String[] tag = tags.split(",");
         if (tag.length>4){

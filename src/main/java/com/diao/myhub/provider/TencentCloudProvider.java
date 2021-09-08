@@ -60,9 +60,10 @@ public class TencentCloudProvider {
         }
         return buckets;
     }
-    public String uploadFile(InputStream inputStream,String type, String fileName, COSClient cosClient){
+    public String uploadFile(InputStream inputStream,String type, long size,String fileName, COSClient cosClient){
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(type);
+        metadata.setContentLength(size);
         String key = UUID.randomUUID()+fileName;
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,key,inputStream,metadata);
         PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);

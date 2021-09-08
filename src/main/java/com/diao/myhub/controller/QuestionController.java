@@ -56,7 +56,7 @@ public class QuestionController {
             }
         }
         QuestionDTO question = questionService.getQuestionDTO(user,id);
-        List<CommentDTO> comments = commentService.getCommentsByPid(id,CommentTypeEnum.COMMENT_TYPE_QUESTION);
+        List<CommentDTO> comments = commentService.getCommentsByPid(user,id,CommentTypeEnum.COMMENT_TYPE_QUESTION);
         List<QuestionDTO> related = questionService.getQuestionsRelated(id);
         model.addAttribute("comments",comments);
         model.addAttribute("question",question);
@@ -109,7 +109,7 @@ public class QuestionController {
         }
         //===========更新验证===========
         question.setId(Long.valueOf(id));
-        question.setGmtModify(new Date().getTime());
+        question.setGmtModify(System.currentTimeMillis());
         if(questionService.updateQuestion(question)==0){
             model.addAttribute("msg","更新失败,服务器异常");
             model.addAttribute("question",question);
@@ -117,5 +117,22 @@ public class QuestionController {
         }
         model.addAttribute("msg","修改成功");
         return "success/success";
+    }
+    @GetMapping("/question/delete/{id}")
+    public String deleteQuestion(@PathVariable("id") Long id,HttpSession session,Model model){
+        Question question = questionService.getQuestion(id);
+        User user=(User)session.getAttribute("user");
+        if (question==null){
+            throw new CustomizeException(CustomizeError.QUESTION_NOT_FOUND);
+        }else if (user==null||!question.getCreator().equals(user.getId())){
+            throw new CustomizeException(CustomizeError.NOT_ALLOWED);
+        }else {
+           int res =  questionService.delQuestionById(id);
+           if (res==0){
+               throw new CustomizeException(CustomizeError.SYS_ERROR);
+           }
+        }
+        model.addAttribute("msg","删除成功!");
+         return "success/success";
     }
 }

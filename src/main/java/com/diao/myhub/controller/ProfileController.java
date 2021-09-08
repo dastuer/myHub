@@ -65,8 +65,8 @@ public class ProfileController {
         return "profile";
     }
     @GetMapping("/delReplies/{id}")
-    public String delReplies(@PathVariable("id") String id){
-        commentService.delCommentById(Long.valueOf(id));
+    public String delReplies(@PathVariable("id") Long id){
+        commentService.delCommentById(id);
         return "redirect:/profile/replies";
     }
     @GetMapping("/delMessage/{id}")

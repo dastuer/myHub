@@ -4,6 +4,8 @@ package com.diao.myhub.service;
 import com.diao.myhub.dto.CommentDTO;
 import com.diao.myhub.dto.MyCommentsDTO;
 import com.diao.myhub.enums.CommentTypeEnum;
+import com.diao.myhub.enums.LikeStatusEnum;
+import com.diao.myhub.enums.LikeTypeEnum;
 import com.diao.myhub.exception.CustomizeError;
 import com.diao.myhub.exception.CustomizeException;
 import com.diao.myhub.mapper.CommentMapper;
@@ -30,6 +32,9 @@ public class CommentServiceImpl implements CommentService{
     private QuestionService questionService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private GreatService greatService;
+
 
 
     @Override
@@ -77,11 +82,11 @@ public class CommentServiceImpl implements CommentService{
             User userById = userService.getUserById(commenter);
             myCommentsDTO.setUser(userById);
             if (comment.getType().equals(CommentTypeEnum.COMMENT_TYPE_QUESTION.getType())) {
-                Question question = questionService.getQuestion(comment.getParentId());
+                Question question = questionService.getQuestionWithNull(comment.getParentId());
                 myCommentsDTO.setQuestion(question);
             } else if (comment.getType().equals(CommentTypeEnum.COMMENT_TYPE_COMMENT.getType())) {
                 Comment commentById = commentMapper.getCommentById(comment.getParentId());
-                Question question = questionService.getQuestion(commentById.getParentId());
+                Question question = questionService.getQuestionWithNull(commentById.getParentId());
                 myCommentsDTO.setQuestion(question);
             }
             BeanUtils.copyProperties(comment, myCommentsDTO);
@@ -92,7 +97,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<CommentDTO> getCommentsByPid(Long qid,CommentTypeEnum typeEnum) {
+    public List<CommentDTO> getCommentsByPid(User user,Long qid,CommentTypeEnum typeEnum) {
         ArrayList<CommentDTO> commentDTOS = new ArrayList<>();
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria().
@@ -104,16 +109,22 @@ public class CommentServiceImpl implements CommentService{
             for (Comment comment : comments) {
                 CommentDTO commentDTO = new CommentDTO();
                 Integer commenter = comment.getCommenter();
-                User user = userService.getUserById(commenter);
+                short likedStatus = LikeStatusEnum.LIKE_STATUS_UNLIKE.getStatus();
+                if (user!=null){
+                    likedStatus= greatService.getIsLikeStatus(user.getId(),comment.getId(), LikeTypeEnum.LIKE_TYPE_COMMENT).getStatus();
+                }
+                commentDTO.setLikedStatus(likedStatus);
+                User commentator = userService.getUserById(commenter);
                 long commentCount = commentMapper.getSubCommentCount(comment.getId());
                 BeanUtils.copyProperties(comment,commentDTO);
                 commentDTO.setSubCommentCount(commentCount);
-                commentDTO.setUser(user);
+                commentDTO.setUser(commentator);
                 commentDTOS.add(commentDTO);
             }
         }
         return commentDTOS;
     }
+    @Override
     public int getTotalSubCommentCount(List<CommentDTO> commentDTOS){
         int res = 0;
         for (CommentDTO commentDTO : commentDTOS) {
@@ -121,6 +132,26 @@ public class CommentServiceImpl implements CommentService{
         }
         return res;
     }
+
+    @Override
+    public int updateLikeInc(Long likeId) {
+        return commentMapper.updateLikeInc(likeId);
+    }
+
+    @Override
+    public int updateLikeDec(Long likeId) {
+        return commentMapper.updateLikeDec(likeId);
+    }
+
+    @Override
+    public int refreshLikeCount(Long likeId) {
+      long  likeCount =  greatService.countByCommentId(likeId);
+        Comment comment = new Comment();
+        comment.setId(likeId);
+        comment.setLikeCount(likeCount);
+        return commentMapper.updateByPrimaryKeySelective(comment);
+    }
+
     @Override
     public int delCommentById(Long id) {
         // 当前评论
@@ -139,7 +170,10 @@ public class CommentServiceImpl implements CommentService{
                 }
             }
             int res = commentMapper.deleteByPrimaryKey(id);
-            questionService.updateCommentDe(comment.getParentId());
+            Question questionWithNull = questionService.getQuestionWithNull(comment.getParentId());
+            if (questionWithNull!=null){
+                questionService.updateCommentDe(comment.getParentId());
+            }
             if (res==0){
                 throw new CustomizeException(CustomizeError.SYS_ERROR);
             }
@@ -148,7 +182,10 @@ public class CommentServiceImpl implements CommentService{
         else if (comment.getType().equals(CommentTypeEnum.COMMENT_TYPE_COMMENT.getType())){
             // 获得父级评论
             Comment comment2 = commentMapper.selectByPrimaryKey(comment.getParentId());
-            questionService.updateCommentDe(comment2.getParentId());
+            Question questionWithNull = questionService.getQuestionWithNull(comment2.getParentId());
+            if (questionWithNull!=null){
+                questionService.updateCommentDe(comment2.getParentId());
+            }
             // 删除当前评论
             return commentMapper.deleteByPrimaryKey(id);
         }

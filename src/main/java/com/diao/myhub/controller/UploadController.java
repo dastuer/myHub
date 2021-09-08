@@ -26,11 +26,11 @@ public class UploadController {
     public String imgUpload(@RequestParam("editormd-image-file") MultipartFile file){
         String type = file.getContentType();
         String originalFilename = file.getOriginalFilename();
+        long size = file.getSize();
         String key= null;
         try {
             InputStream inputStream = file.getInputStream();
-            key = cloudProvider.uploadFile(inputStream,type,originalFilename,cosClient);
-
+            key = cloudProvider.uploadFile(inputStream,type,size,originalFilename,cosClient);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,6 @@ public class UploadController {
         imageDTO.setUrl(cloudProvider.getUrl(cosClient,key));
         imageDTO.setMessage("ok");
         imageDTO.setSuccess(1);
-        cosClient.shutdown();
         return JSON.toJSONString(imageDTO);
     }
 }

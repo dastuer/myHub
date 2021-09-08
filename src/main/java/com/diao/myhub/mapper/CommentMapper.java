@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
 @Mapper
 public interface CommentMapper {
     /**
@@ -105,4 +107,8 @@ public interface CommentMapper {
     Long getSubCommentCount(Long pid);
     @Select("select * from myhub.comment where id=#{id}")
     Comment getCommentById(Long id);
+    @Update("update myhub.comment set like_count = like_count + 1 where id = #{likeId}")
+    int updateLikeInc(Long likeId);
+    @Update("update myhub.comment set like_count = like_count - 1 where id = #{likeId}")
+    int updateLikeDec(Long likeId);
 }

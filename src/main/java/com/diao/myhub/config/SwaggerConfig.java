@@ -25,12 +25,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 // 设置组名
                 .apiInfo(apiInfo)
                 .select().apis(RequestHandlerSelectors.
-                        // withClassAnnotation(Class<T>)扫描类的注解
-                        // withMethodAnnotation(Class<T>)扫描方法注解
-                        // basePackage(String path)扫描包
-                        // any(),none()
                                 basePackage("com.diao.myhub.controller")).build();
-                //.paths(PathSelectors.ant("") 扫描路径;
     }
     @Bean
     public ApiInfo apiInfo(){

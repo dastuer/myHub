@@ -27,7 +27,7 @@ public class QuestionServiceImpl implements QuestionService{
     private CommentService commentService;
     @Autowired
     private GreatService greatService;
-    private static final Integer size = 6;
+    private static final Integer size = 12;
 
     @Autowired
     public void setUserMapper(UserMapper userMapper) {

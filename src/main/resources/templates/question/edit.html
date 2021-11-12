@@ -17,11 +17,7 @@
     <script>
         window.onload = function (){showTag()}
     </script>
-    <script>
-        window.onload = function (){
-            flex();
-        }
-    </script>
+
 
 </head>
 <body class="pub">
@@ -96,5 +92,10 @@
     </div>
 </div>
 <div th:replace="~{common/commons::foot}"></div>
+<script>
+    $(function () {
+        flex();
+    })
+</script>
 </body>
 </html>

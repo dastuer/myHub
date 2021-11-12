@@ -202,3 +202,18 @@ body{
 .q_head .text-desc{
     padding: 0;
 }
+.q_related_li{
+    margin: 0 0 6px 0;
+}
+.q_related_ul{
+    padding: 0;
+    list-style: none;
+    font-size: 16px;
+}
+.icon_login{
+    width:65px;
+    margin: 0 36px 0 0;
+}
+.icon_login_b{
+    width:65px;
+}

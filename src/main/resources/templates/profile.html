@@ -74,8 +74,12 @@
                         <div class="media-body message-media">
                             <h5 class="media-heading">
                                 <span th:text="${notify.user.name}"></span>
-                                在问题 <span><a th:href="@{'/question/'+${notify.question.id}('notify'=${notify.id})}">
-                                <span th:text="${notify.question.title}"></span></a></span>回复了我
+                                在
+                                <span th:if="${notify.question!=null}"><a th:href="@{'/question/'+${notify.question.id}('notify'=${notify.id})}">
+                                <span th:text="${notify.question.title}"></span></a>
+                                </span>
+                                <span th:if="${notify.question==null}" th:text="'[已被删除问题]'"></span>
+                                回复了我
                                 <span th:if="${notify.comment!=null}" th:text="'的评论'+${notify.comment.content}"></span>
                                 <span class="unread-icon" th:if="${notify.status==0}">未读</span>
                                 <span class="read-icon" th:if="${notify.status==1}">已读</span>

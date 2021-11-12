@@ -8,8 +8,6 @@ import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface UserMapper {
-    @Insert("insert into user(name,account_id,token,gmt_create,gmt_modify,bio,avatar_url) " +
-            "value (#{name},#{accountId},#{token},#{gmtCreate},#{gmtModify},#{bio},#{avatarUrl})")
     int addUser(User user);
     @Select("select * from user where token=#{token}")
     User selectUserByToken(String token);

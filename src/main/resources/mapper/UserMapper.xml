@@ -265,4 +265,9 @@
 <!--    &amp;amp;amp;amp;lt;select id="getUserByAccountId" resultType="user"&amp;amp;amp;amp;gt;-->
 <!--        select * from myhub.user where account_id = #{id}-->
 <!--    &amp;amp;amp;amp;lt;/select&amp;amp;amp;amp;gt;-->
+  <insert id="addUser" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+    insert into user(name,account_id,token,gmt_create,gmt_modify,bio,avatar_url)
+            value (#{name},#{accountId},#{token},#{gmtCreate},#{gmtModify},#{bio},#{avatarUrl})
+  </insert>
+
 </mapper>

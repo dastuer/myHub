@@ -3,6 +3,9 @@ package com.diao.myhub.dto;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Huah
+ */
 @Data
 @Component
 public class GiteeUser {

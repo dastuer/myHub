@@ -2,6 +2,9 @@ package com.diao.myhub.dto;
 
 import lombok.Data;
 
+/**
+ * @author Huah
+ */
 @Data
 public class HotTagDTO implements Comparable{
     private String tagName;

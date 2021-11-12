@@ -38,7 +38,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li th:if="${session.user != null}"><a href="/publish">发布话题</a></li>
         <li th:if="${session.user!=null}"> <a  th:href="@{/profile/message}">我的消息 <span th:if="${session.user.unread}>0" th:text="${session.user.unread}" class="badge"></span></a></li>
-        <li th:if="${session.user==null}"> <a  th:href="@{/login}">登录</a></li>
+        <li th:if="${session.user == null}"><a href="#" data-toggle="modal" data-target="#myModal">登录</a></li>
         <li class="dropdown" th:if="${session.user!=null}">
           <a href="#" class="dropdown-toggle"  type="button" aria-haspopup="true" data-toggle="dropdown" id="dropdown">
             <span  th:text="${session.user.name}"></span>
@@ -52,6 +52,28 @@
         </li>
 
       </ul>
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="margin-top: 200px;width: 300px;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                      aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">登录注册</h4>
+            </div>
+            <div class="modal-body" style="text-align:center">
+              <a th:href="@{/login/gitee}">
+                <img class="icon_login" th:src="@{/images/gitee.png}">
+              </a>
+              <a th:href="@{/login/baidu}">
+                <img class="icon_login_b" th:src="@{/images/baidu.png}">
+              </a>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -66,7 +88,7 @@
 </div>
 <!--尾部版权-->
 <div th:fragment="foot" class="footer">
-  <div>Copyright © 2021  ICP备000000号 · 服务器赞助: <a href="https://www.ucloud.cn/">UCloud</a> · All Rights Reserved Powered By <a href="http://www.myhub.ltd" target="_blank"> myhub </a></div>
+<!--  <div>Copyright © 2021  ICP备000000号 · 服务器赞助: <a href="https://www.ucloud.cn/">UCloud</a> · All Rights Reserved Powered By <a href="http://www.myhub.ltd" target="_blank"> myhub </a></div>-->
 </div>
 
 </body>

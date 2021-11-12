@@ -5,10 +5,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Huah
+ */
 @Data
-@Component
-@PropertySource("classpath:private.properties")
-@ConfigurationProperties(prefix = "gitee.client")
 public class AccessTokenDTO {
     private String grant_type;
     private String client_id;

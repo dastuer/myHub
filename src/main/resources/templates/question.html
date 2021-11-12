@@ -19,13 +19,6 @@
     <script src="/editor.md/lib/marked.min.js"></script>
     <script src="/editor.md/lib/prettify.min.js"></script>
     <script th:src="@{/js/myhub.js}"></script>
-    <script>
-
-
-    window.onload = function (){
-            flex();
-        }
-    </script>
 
 
 </head>
@@ -141,11 +134,25 @@
                 </div>
             </div>
             <hr>
+            <div><h4>相关话题</h4></div>
+            <div>
+                <ul class="q_related_ul">
+                    <li class="q_related_li" th:if="${related!=null}"  th:each="relate:${related}">
+                        <a th:href="@{'/question/'+${relate.id}}" th:text="${relate.title}"></a>
+                    </li>
+                </ul>
+            </div>
+            <hr>
             <div th:replace="~{common/commons::sidebar}"></div>
     </div>
 
 </div>
 </div>
 <div th:replace="~{common/commons::foot}"></div>
+<script>
+    $(function () {
+        flex();
+    })
+</script>
 </body>
 </html>

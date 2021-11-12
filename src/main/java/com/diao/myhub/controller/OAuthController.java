@@ -3,53 +3,42 @@ package com.diao.myhub.controller;
 import com.diao.myhub.dto.AccessTokenDTO;
 import com.diao.myhub.dto.GiteeUser;
 import com.diao.myhub.model.User;
-import com.diao.myhub.provider.GiteeProvider;
 import com.diao.myhub.service.UserService;
+import com.diao.myhub.strategy.DTO.LoginUser;
+import com.diao.myhub.strategy.UserLoginFactory;
+import com.diao.myhub.strategy.UserStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.UUID;
 
-// 接入gitee控制器
+/**
+ * @author Huah
+ */ // 接入gitee控制器
 @Controller
 @Slf4j
 @PropertySource("classpath:private.properties")
 public class OAuthController {
     @Autowired
-    public void setProvider(GiteeProvider provider) {
-        this.provider = provider;
-    }
-    @Autowired
-    public void setAccessTokenDTO(AccessTokenDTO accessTokenDTO) {
-        this.accessTokenDTO = accessTokenDTO;
-    }
-    private GiteeProvider provider;
-    @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-    private AccessTokenDTO accessTokenDTO;
+    @Autowired
+    private UserLoginFactory loginFactory;
     private UserService userService;
     @Value("${gitee.client.getOAuth_url}")
     private String oAuUrl;
-    @GetMapping("/login")
-    public void login(HttpServletRequest req,HttpServletResponse resp) throws IOException {
-        String url = oAuUrl;
-        resp.sendRedirect(url);
-    }
+
     @GetMapping("/logout")
     public String logout(HttpServletRequest req,HttpServletResponse resp) throws IOException {
         req.getSession().removeAttribute("user");
@@ -59,19 +48,28 @@ public class OAuthController {
         cookie.setPath("/");
         return "redirect:/index";
     }
+    @GetMapping("/login/{type}")
+    public void login(@PathVariable String type,
+                      HttpServletRequest req,
+                      HttpServletResponse resp) throws IOException {
+        req.getSession().setAttribute("loginType",type);
+        UserStrategy loginStrategy = loginFactory.getLoginStrategy(type);
+        String redirectUri = loginStrategy.getRedirectUri();
+        resp.sendRedirect(redirectUri);
+    }
+
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
-                           HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        // 接收返回的code
-        accessTokenDTO.setCode(code);
-        // 根据返回的code获取token
-        String accessToken = provider.getAccessToken(accessTokenDTO);
-        // 获取用户数据
-        GiteeUser giteeUser = provider.getUser(accessToken);
-        // gitee登录成功,得到用户数据
-        if (giteeUser!=null){
+                           HttpServletRequest req,
+                           HttpServletResponse resp) throws Exception {
+        String type = (String) req.getSession().getAttribute("loginType");
+        AccessTokenDTO tokenDTO = new AccessTokenDTO();
+        tokenDTO.setCode(code);
+        UserStrategy loginStrategy = loginFactory.getLoginStrategy(type);
+        LoginUser loginUser = loginStrategy.getLoginUser(tokenDTO);
+        if (loginUser!=null){
             // 查询用户是否曾经登陆过
-            User user = userService.getUserByAccountId("gitee" + giteeUser.getId());
+            User user = userService.getUserByAccountId(type + loginUser.getId());
             String token = UUID.randomUUID().toString().replace("-","");
             // 曾经登录过,更新token
             if (user!=null){
@@ -79,7 +77,7 @@ public class OAuthController {
                 userService.updateToken(user.getId(),token);
             }else {
                 // 未登录则创建新用户
-                user = createUserByGiteeUser(giteeUser);
+                user = createUserByLoginUser(type,loginUser);
                 user.setToken(token);
                 userService.addUser(user);
             }
@@ -89,18 +87,18 @@ public class OAuthController {
             clientToken.setMaxAge(2_592_000);
             clientToken.setPath("/");
             resp.addCookie(clientToken);
-        }else {log.error("gitee错误,获取用户信息失败{}",giteeUser);}
+        }else {log.info("获取用户信息失败");}
         return "redirect:/index";
     }
-    // 通过gitee用户创建本地用户
-    private User createUserByGiteeUser(GiteeUser giteeUser){
+
+    private User createUserByLoginUser(String type,LoginUser loginUser){
         User user = new User();
-        user.setName(giteeUser.getName());
-        user.setAccountId("gitee"+ giteeUser.getId());
+        user.setName(loginUser.getName());
+        user.setAccountId(type+loginUser.getId());
         user.setGmtCreate(System.currentTimeMillis());
         user.setGmtModify(user.getGmtCreate());
-        user.setBio(giteeUser.getBio());
-        user.setAvatarUrl(giteeUser.getAvatar_url());
+        user.setBio(loginUser.getBio());
+        user.setAvatarUrl(loginUser.getAvatar_url());
         return user;
     }
 }

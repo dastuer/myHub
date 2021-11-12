@@ -12,7 +12,6 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableOpenApi
 @EnableScheduling
 public class MyHubApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(MyHubApplication.class, args);
     }

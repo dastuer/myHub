@@ -24,8 +24,8 @@ public class HotTagTasks {
     @Scheduled(fixedRate = 1800000)
     public void hotTagSchedule(){
         log.info("hot tag flush task start {}",new Date());
-        // 获取20天之内的所有问题
-        long recentTime = 20*24*60*60*1000L;
+        // 获取20年之内的所有问题
+        long recentTime = 630_720_000_000L;
         long now = System.currentTimeMillis();
         List<Question> recentQuestions = new ArrayList<>();
         HashMap<String, Integer[]> hotTagMap = new HashMap<>();

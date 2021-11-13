@@ -21,6 +21,7 @@ public interface QuestionService {
     List<QuestionDTO> getQuestionsRelated(Long id);
     List<Question> getAllQuestions();
     List<Question> getRecentQuestions(Long time,int offset,int limit);
+    int addQuestion(Question question);
 
     int updateLikeInc(Long likeId);
 

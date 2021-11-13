@@ -40,6 +40,10 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    public int addQuestion(Question question) {
+        return questionMapper.addQuestion(question);
+    }
+    @Override
     public PaginationDTO getQuestions(String tag,String[] keys,Integer page) {
         Integer offset = (page-1)*size;
         Integer totalCount = questionMapper.count();

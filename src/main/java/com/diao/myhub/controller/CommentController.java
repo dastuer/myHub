@@ -42,9 +42,6 @@ public class CommentController {
         HashMap<String, Integer> map = new HashMap<>();
         // 找到评论人
         User user = (User) req.getSession().getAttribute("user");
-        if (user==null){
-            throw new CustomizeException(CustomizeError.NO_LOGIN);
-        }
         // 判断评论内容是否正确
         if (comment.getContent()==null||comment.getType()==null
                 ||comment.getParentId()==null){

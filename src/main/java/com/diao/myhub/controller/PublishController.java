@@ -7,6 +7,7 @@ import com.diao.myhub.exception.CustomizeException;
 import com.diao.myhub.model.Question;
 import com.diao.myhub.model.User;
 import com.diao.myhub.service.PublishService;
+import com.diao.myhub.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,8 @@ public class PublishController {
     }
     private PublishService publishService;
     @Autowired
+    private QuestionService questionService;
+    @Autowired
     private TagCache tagCache;
     @GetMapping("/publish")
     public String publish(HttpServletRequest req, Model model){
@@ -42,9 +45,6 @@ public class PublishController {
     @PostMapping("/publish")
     public String doPublish(Question question, Model model,HttpServletRequest req){
         User user = (User) req.getSession().getAttribute("user");
-        if (user==null) {
-            throw new CustomizeException(CustomizeError.NO_LOGIN);
-        }
         question.setCreator(user.getId());
         model.addAttribute("question",question);
 
@@ -59,7 +59,7 @@ public class PublishController {
         }
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModify(question.getGmtCreate());
-        int res = publishService.addQuestion(question);
+        int res = questionService.addQuestion(question);
         if (res==0){
             model.addAttribute("msg","发布失败,服务器异常");
             return "publish";

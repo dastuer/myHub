@@ -1,6 +1,7 @@
 server:
   port: 80
   max-http-header-size: 1024KB
+
 gitee:
   client:
     grant_type: authorization_code

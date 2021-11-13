@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.diao.myhub.mapper.QuestionMapper">
+    <insert id="addQuestion" parameterType="question">
+        insert into myhub.question (title,creator,description,tag,gmt_create,gmt_modify)
+            value (#{title},#{creator},#{description},#{tag},#{gmtCreate},#{gmtModify})
+    </insert>
     <select id="getQuestions" resultType="question">
         select * from myhub.question order by gmt_modify desc limit  #{offset},#{size};
     </select>

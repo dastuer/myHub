@@ -47,7 +47,6 @@ public class BaiduProvider {
                 throw new CustomizeException(CustomizeError.SYS_ERROR);
             }
             String s = response.body().string();
-            System.out.println(s);
             JSONObject jsonObject = JSON.parseObject(s);
             return jsonObject.getString("access_token");
         }

@@ -42,4 +42,5 @@ public interface QuestionMapper {
     int updateLikeCount(Long id, long questionLikeCount);
     @Delete("delete  from myhub.question where id = #{id}")
     int delQuestionById(Long id);
+    int addQuestion(Question question);
 }

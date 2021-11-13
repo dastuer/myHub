@@ -11,17 +11,11 @@ import java.util.Set;
 
 @Service
 public class PublishServiceImpl implements PublishService{
-    @Autowired
-    public void setMapper(PublishMapper mapper) {
-        this.mapper = mapper;
-    }
+
     @Autowired
     private TagCache tagCache;
-    private PublishMapper mapper;
-    @Override
-    public int addQuestion(Question question) {
-     return mapper.addQuestion(question);
-    }
+
+
     @Override
     public boolean validate(String tags){
         String[] tag = tags.split(",");

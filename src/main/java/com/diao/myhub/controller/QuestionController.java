@@ -68,9 +68,6 @@ public class QuestionController {
     public String edit(@PathVariable("id") Long id, Model model,HttpServletRequest req){
 
         User user = (User)req.getSession().getAttribute("user");
-        if (user==null){
-            throw new CustomizeException(CustomizeError.NO_LOGIN);
-        }
         Question question = questionService.getQuestion(id);
         // 返回所有分组
         model.addAttribute("tagsList",tagCache.getTagCache());
@@ -80,7 +77,7 @@ public class QuestionController {
         return "question/edit";
     }
     @PostMapping("/question/edit/{id}")
-    public String doEdit(@PathVariable("id")String id, Question question, Model model, HttpServletRequest req){
+    public String doEdit(@PathVariable("id")Long id, Question question, Model model, HttpServletRequest req){
 
         // =========参数为空判断==========
         if (question.getTag()==null||question.getTag().trim().length()==0||
@@ -92,10 +89,7 @@ public class QuestionController {
         }
         // =========用户权限判读=========
         User user = (User) req.getSession().getAttribute("user");
-        if (user==null) {
-            throw new CustomizeException(CustomizeError.NO_LOGIN);
-        }
-        Question localQuestion = questionService.getQuestion(Long.valueOf(id));
+        Question localQuestion = questionService.getQuestion(id);
         if (!localQuestion.getCreator().equals(user.getId())){
             model.addAttribute("msg","权限不足,无法修改");
             model.addAttribute("question",question);
@@ -108,7 +102,7 @@ public class QuestionController {
             return "question/edit";
         }
         //===========更新验证===========
-        question.setId(Long.valueOf(id));
+        question.setId(id);
         question.setGmtModify(System.currentTimeMillis());
         if(questionService.updateQuestion(question)==0){
             model.addAttribute("msg","更新失败,服务器异常");

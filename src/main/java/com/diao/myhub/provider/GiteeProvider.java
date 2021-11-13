@@ -55,8 +55,7 @@ public class GiteeProvider {
                 throw new CustomizeException(CustomizeError.SYS_ERROR);
             }
             String resp = response.body().string();
-            GiteeUser user = JSON.parseObject(resp, GiteeUser.class);
-            return user;
+            return JSON.parseObject(resp, GiteeUser.class);
         }
     }
 }

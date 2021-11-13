@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
  * @author Huah
  */
 @Data
-@Component
 public class GiteeUser {
     private String name;
-    private Long id;
+    private String id;
     private String bio;
     private String avatar_url;
 }

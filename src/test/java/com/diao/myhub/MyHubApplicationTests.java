@@ -7,10 +7,14 @@ import com.diao.myhub.service.CommentService;
 import com.diao.myhub.service.NotifyService;
 import com.diao.myhub.service.QuestionService;
 import com.diao.myhub.service.UserService;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 @SpringBootTest
@@ -32,17 +36,10 @@ class MyHubApplicationTests {
 
     @Test
     void contextLoads() {
-//        System.out.println(commentService.getMyCommentDTOSByCommenterId(23).size());
-//        List<Question> questions = questionMapper.getQuestions(1,5);
-//        for (int i = 0; i < 5; i++) {
-//            for (Question question : questions) {
-//                publishMapper.addQuestion(question);
-//            }
-//        }
-//        List<CommentDTO> commentsByQuestion = commentService.getCommentsByQuestion((long) 41);
-//        System.out.println(commentsByQuestion);
-//        System.out.println(notifyService.getNotifyDTOS(23).size());
         tagTasks.hotTagSchedule();
+        HashMap<String, String> hashMap = new HashMap<>();
+        val strings = new ArrayList<String>(Arrays.asList("1", "2", "3"));
+        System.out.println(strings);
 
     }
 

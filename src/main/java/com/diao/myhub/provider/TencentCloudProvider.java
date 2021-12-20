@@ -22,6 +22,7 @@ import java.util.UUID;
 
 @Component
 @PropertySource("classpath:private.properties")
+@Deprecated
 public class TencentCloudProvider {
     @Value("${bucketName}")
     private String bucketName;

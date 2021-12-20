@@ -20,6 +20,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -63,6 +64,9 @@ public class OAuthController {
                            HttpServletRequest req,
                            HttpServletResponse resp) throws Exception {
         String type = (String) req.getSession().getAttribute("loginType");
+        if (Objects.isNull(type)){
+            type = "gitee";
+        }
         AccessTokenDTO tokenDTO = new AccessTokenDTO();
         tokenDTO.setCode(code);
         UserStrategy loginStrategy = loginFactory.getLoginStrategy(type);

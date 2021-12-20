@@ -15,7 +15,10 @@
     <script src="/editor.md/editormd.min.js"></script>
     <script th:src="@{/js/myhub.js}"></script>
     <script>
-        window.onload = function (){showTag()}
+        window.onload = function () {
+            showTag()
+            md_editor();
+        }
     </script>
 
 </head>
@@ -47,17 +50,6 @@
                     </textarea>
                     </div>
                     <script type="text/javascript">
-                        $(function() {
-                            var editor = editormd("editor", {
-                                width: "100%",
-                                height: 500,
-                                imageUpload          : true,          // Enable/disable upload
-                                imageFormats         : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-                                imageUploadURL       : "/imgUpload",             // Upload url
-                                // markdown: "xxxx",     // dynamic set Markdown text
-                                path : "/editor.md/lib/"  // Autoload modules mode, codemirror, marked... dependents libs path
-                            });
-                        });
                     </script>
                 </div>
                 <div class="form-group">

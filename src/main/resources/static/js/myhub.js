@@ -272,8 +272,22 @@ function voidClick(){
     }
     return 1;
 }
-function confirm_delete(e) {
-    $(e).click(function(){
-
+function md_editor(){
+    $(function() {
+        var editor = editormd("editor", {
+            htmlDecode: "style,script,iframe|on*",
+            width: "100%",
+            height: 500,
+            imageUpload          : true,          // Enable/disable upload
+            imageFormats         : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL       : "/imgUpload",             // Upload url
+            // markdown: "xxxx",     // dynamic set Markdown text
+            path : "/editor.md/lib/"  // Autoload modules mode, codemirror, marked... dependents libs path
+        });
+    });
+}
+function markdown_view() {
+    $(function() {
+        var testView = editormd.markdownToHTML("markdown-view", {htmlDecode: "style,script,iframe|on*"});
     });
 }
